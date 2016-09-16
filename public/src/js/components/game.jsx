@@ -26,7 +26,7 @@ class Game extends React.Component {
     super();
     this.addChip = this.addChip.bind(this);
     this.resetGame = this.resetGame.bind(this);
-    this.sendCode = this.sendCode.bind(this);
+    // this.sendCode = this.sendCode.bind(this);
     this.inputBox = this.inputBox.bind(this);
   }
 
@@ -70,21 +70,21 @@ class Game extends React.Component {
         gameArray,
         col,
         turn: this.props.game.turn,
-        players: this.props.game.players
+        players: this.props.game.players,
       }));
     }
   }
 
-  sendCode(event) {
-    event.preventDefault();
-    const promise = new Promise((res) => {
-      res(this.props.dispatch(actions.sendCode(this.number.value, this.props.game.accessCode)));
-    });
+  // sendCode(event) {
+  //   event.preventDefault();
+  //   const promise = new Promise((res) => {
+  //     res(this.props.dispatch(actions.sendCode(this.number.value, this.props.game.accessCode)));
+  //   });
 
     // promise.then(
     //   console.log('code sent successfully')
     // );
-  }
+  // }
 
   render() {
     // was getting error 'this.props.game.turn is undefined',
@@ -126,34 +126,43 @@ class Game extends React.Component {
       );
     });
 
-
     return (
       <div className="flex-container">
-        <div className="player-one">
-          <h2>Player One: {this.props.game.players.Red}</h2>
-          <ul><Tile value={1} /></ul>
+        <div className="game-header">
+          <div className="access-module">
+            <h2 className="access-code">Access Code: {this.props.game.accessCode}</h2>
+            <button className="new-game" onClick={this.resetGame}>New Game</button>
+          </div>
+          {/* <h2 className="share">Share Access Code:</h2>
+          <form onSubmit={this.sendCode} className="form">
+            <input
+              type="text"
+              className="input-box"
+              placeholder="Enter 10-digit phone number"
+              ref={(number) => { this.number = number; }}
+              required
+            />
+            <button type="submit">Send Code</button>
+          </form> */}
+          <div className="title-header">
+            <h1>Connect Four with Friends</h1>
+            <h2>{message}</h2>
+          </div>
+          <div className="players">
+            <div className="player-one">
+              <ul><Tile value={1} /></ul>
+              <h2>Player One: {this.props.game.players.Red}</h2>
+            </div>
+            <div className="player-two">
+              <ul><Tile value={-1} /></ul>
+              <h2>Player Two: {this.props.game.players.Blue}</h2>
+            </div>
+          </div>
         </div>
-        <div className="player-two">
-          <h2>Player Two: {this.props.game.players.Blue}</h2>
-          <ul><Tile value={-1} /></ul>
-        </div>
-        <h2 className="access-code">Access Code: {this.props.game.accessCode}</h2>
-        <h2 className="share">Share Access Code:</h2>
-        <form onSubmit={this.sendCode} className="form">
-          <input
-            type="text"
-            className="input-box"
-            placeholder="Enter 10-digit phone number"
-            ref={(number) => { this.number = number; }}
-            required
-          />
-          <button type="submit">Send Code</button>
-        </form>
-        <h1>Connect Four with Friends</h1>
-        <button onClick={this.resetGame}>New Game</button>
-        <h2>{message}</h2>
         <section className="game">
-          {game}
+          <div>
+            {game}
+          </div>
         </section>
       </div>
     );
