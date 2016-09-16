@@ -3,9 +3,9 @@ const Game = require('../models/game');
 
 const router = express.Router();
 
-const twilio = require('twilio');
-const sid = process.env.sid || require('./twilio/sid') ;
-const token = process.env.token || require('./twilio/token');
+// const twilio = require('twilio');
+// const sid = process.env.sid || require('./twilio/sid') ;
+// const token = process.env.token || require('./twilio/token');
 
 // Helper function to determine what color the chip is by returning true or false
 // It will take in the chip as a param and see if it is equal to 1, if so it is red
@@ -183,9 +183,8 @@ function makeCode() {
 }
 // helper function to look up game by access code and then add player to it
 function findGame(code) {
-
   return new Promise((resolve, reject) => {
-    Game.find({ accessCode: code}, (err, game) => {
+    Game.find({ accessCode: code }, (err, game) => {
       if (err) {
         reject(err);
       }
@@ -198,26 +197,26 @@ function findGame(code) {
 }
 
 /* ---------------- Twilio Endpoint' ---------------- */
-
-const client = new twilio.RestClient(sid, token);
-
-router.post('/share/:number/:code', function(request, response) {
-  const number = request.params.number;
-  const code = request.params.code;
-  let recipient = '+1' + number;
-  let message = 'Join me for a game of connect-four with this access code: ' + code;
-
-  client.messages.create({
-      body: message, 
-      to: recipient,  
-      from: '+18323429579'
-  }, function(err) {
-      if(err) {
-        console.log(err);
-      }
-      return response.json();
-  });
-});
+//
+// const client = new twilio.RestClient(sid, token);
+//
+// router.post('/share/:number/:code', function(request, response) {
+//   const number = request.params.number;
+//   const code = request.params.code;
+//   let recipient = '+1' + number;
+//   let message = 'Join me for a game of connect-four with this access code: ' + code;
+//
+//   client.messages.create({
+//       body: message,
+//       to: recipient,
+//       from: '+18323429579'
+//   }, function(err) {
+//       if(err) {
+//         console.log(err);
+//       }
+//       return response.json();
+//   });
+// });
 /* ---------------- '/game Endpoints' ---------------- */
 
 // GET endpoint that will return all the games in the db
@@ -251,7 +250,10 @@ router.post('/:name', (req, res) => {
       ],
       isWinner: false,
       turn: 'Red',
-      players: {'Red': req.params.name, 'Blue': 'Blue'}
+      players: {
+        Red: req.params.name,
+        Blue: 'Blue',
+      },
     }, (err, game) => {
       if (err) {
         return res.status(400).json(err);
@@ -304,7 +306,7 @@ router.put('/', (req, res) => {
       isWinner,
       turn,
       gameArray,
-      players
+      players,
     }, { new: true }, (err, game) => {
       if (err) {
         return res.status(400).json(err);
@@ -316,24 +318,25 @@ router.put('/', (req, res) => {
         isWinner: game.isWinner,
         turn: game.turn,
         gameArray: game.gameArray,
-        players: game.players
+        players: game.players,
       });
     });
   }
 });
 
-/*---------------- '/game/join Endpoint' --------------*/
+/* ---------------- '/game/join Endpoint' -------------- */
+
 router.put('/join/:accessCode/:name', (req, res) => {
   const accessCode = req.params.accessCode;
   const playerTwo = req.params.name;
 
   const promise = findGame(accessCode);
 
-  promise.then((game) => {
-    const isWinner = game[0].isWinner;
-    const turn = game[0].turn;
-    const gameArray = game[0].gameArray;
-    const players = game[0].players;
+  promise.then((gameFound) => {
+    const isWinner = gameFound[0].isWinner;
+    const turn = gameFound[0].turn;
+    const gameArray = gameFound[0].gameArray;
+    const players = gameFound[0].players;
     players.Blue = playerTwo;
     Game.findOneAndUpdate({
       accessCode,
@@ -341,7 +344,7 @@ router.put('/join/:accessCode/:name', (req, res) => {
       isWinner,
       turn,
       gameArray,
-      players
+      players,
     }, { new: true }, (err, game) => {
       if (err) {
         return res.status(400).json(err);
@@ -351,7 +354,7 @@ router.put('/join/:accessCode/:name', (req, res) => {
         isWinner: game.isWinner,
         turn: game.turn,
         gameArray: game.gameArray,
-        players: game.players
+        players: game.players,
       });
     });
   });
