@@ -87,31 +87,13 @@ class Game extends React.Component {
   }
 
   render() {
-    // was getting error 'this.props.game.turn is undefined', 
-    // so added this here and was then able to get rid 
+    // was getting error 'this.props.game.turn is undefined',
+    // so added this here and was then able to get rid
     // of the 'if (this.props.game.gameArray) statement above line 90'
     if (!this.props.game.turn) {
       return null;
     }
 
-    // if (this.props.game.inputBox) {
-    //   return (
-    //     <div className="flex-container">
-    //       <div className='player-one'><h2>Player One: {this.props.game.players.Red}</h2>&nbsp;&nbsp;<ul><Tile value={1}/></ul></div>
-    //       <div className='player-two'><h2>Player Two: {this.props.game.players.Blue}</h2>&nbsp;&nbsp;<ul><Tile value={-1}/></ul></div>
-    //       <form onSubmit={this.sendCode}>
-    //         <input type='text' className='input-box' placeholder='Enter 10-digit phone number' ref={(number) => { this.number = number; }} required />
-    //         <button type="submit">Send Code</button>
-    //       </form>
-    //       <h1>Connect Four with Friends</h1>
-    //       <button onClick={this.resetGame}>New Game</button>
-    //       <h2>{message}</h2>
-    //       <section className="game">
-    //         {game}
-    //       </section>
-    //     </div>
-    //   );
-    // }
     // winner constant will be set to the last persons turn because
     // turn changes are handled in the backend. backend responds with the new turn
     // rather than the winner's turn and a boolean for if a winner was detected
@@ -147,10 +129,26 @@ class Game extends React.Component {
 
     return (
       <div className="flex-container">
-        <div className='player-one'><h2>Player One: {this.props.game.players.Red}</h2>&nbsp;&nbsp;<ul><Tile value={1}/></ul></div>
-        <div className='player-two'><h2>Player Two: {this.props.game.players.Blue}</h2>&nbsp;&nbsp;<ul><Tile value={-1}/></ul></div>
-        <h2 className='access-code'>Access Code: {this.props.game.accessCode}</h2>
-        <h2 className='share'>Share Access Code:</h2>&nbsp;&nbsp;<form onSubmit={this.sendCode} className='form'><input type='text' className='input-box' placeholder='Enter 10-digit phone number' ref={(number) => { this.number = number; }} required /><button type="submit">Send Code</button></form>
+        <div className="player-one">
+          <h2>Player One: {this.props.game.players.Red}</h2>
+          <ul><Tile value={1} /></ul>
+        </div>
+        <div className="player-two">
+          <h2>Player Two: {this.props.game.players.Blue}</h2>
+          <ul><Tile value={-1} /></ul>
+        </div>
+        <h2 className="access-code">Access Code: {this.props.game.accessCode}</h2>
+        <h2 className="share">Share Access Code:</h2>
+        <form onSubmit={this.sendCode} className="form">
+          <input
+            type="text"
+            className="input-box"
+            placeholder="Enter 10-digit phone number"
+            ref={(number) => { this.number = number; }}
+            required
+          />
+          <button type="submit">Send Code</button>
+        </form>
         <h1>Connect Four with Friends</h1>
         <button onClick={this.resetGame}>New Game</button>
         <h2>{message}</h2>
